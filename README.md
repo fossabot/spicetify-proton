@@ -1,29 +1,29 @@
 # spicetify-proton
 Looks pretty horrific right now since Proton Native hasn't been implemented any layout engine.
 
-### Req:
-1. Git
+## Req:
+1. Git/Github Desktop
 2. NodeJS
 3. [Yarn](https://yarnpkg.com/en/docs/install#windows-stable)
 
-### Setup
+## Setup
 `git clone https://github.com/khanhas/spicetify-proton`
 `cd spicetify-proton`
-
+  
 or download repository zip from Github then extract somewhere, then
-`cd spicetify-proton-master`
+`cd just-extracted-folder`
 
-Finally:
+Finally:  
 `yarn`
 
-#### Run
+### Run
 `yarn start`
 
-#### Lint
+### Lint
 `yarn lint`
 
-#### Build
+### Build
 `yarn build`
 
-#### Package
+### Package
 `yarn pack`
