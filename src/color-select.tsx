@@ -1,77 +1,40 @@
-import React, { Component } from "react";
-import { render, Box, Checkbox, ColorButton, Grid, Group, Text } from "proton-native";
+import { Component } from "react";
+import { render, Grid } from "proton-native";
+import { ColorContainer } from "./color-container";
+import { ThemeLoader } from "./theme-loader";
 
 export class ColorSelect extends Component {
+    private readonly maxCol = 4;
+
     public render() {
         return (
-            <Group title="Theme:">
-                <Grid padded={true}>
-                    <Box row={0} column={0}>
-                        <Text>Main FG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={0} column={1}>
-                        <Text>Secondary FG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={0} column={2}>
-                        <Text>Main BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={0} column={3}>
-                        <Text>Sidebar BG, player BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={1} column={0}>
-                        <Text>Cover overlay, Shadow</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={1} column={1}>
-                        <Text>Indicator FG, Button BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={1} column={2}>
-                        <Text>Pressing FG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={1} column={3}>
-                        <Text>Slider BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={2} column={0}>
-                        <Text>Sidebar indicator, Hover button BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={2} column={1}>
-                        <Text>Scrollbar FG, Selected row BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={2} column={2}>
-                        <Text>Pressing button FG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={2} column={3}>
-                        <Text>Pressing button BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={3} column={0}>
-                        <Text>Selected button</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={3} column={1}>
-                        <Text>Miscellaneous BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={3} column={2}>
-                        <Text>Miscellaneous hover BG</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                    <Box row={3} column={3}>
-                        <Text>Preserve</Text>
-                        <ColorButton padded={true}/>
-                    </Box>
-                </Grid>
-            </Group>
+            <Grid padded>
+                {this.getColorBox()}
+            </Grid>
         );
+    }
+
+    private getColorBox() {
+        const loader = new ThemeLoader();
+        const colorList = loader.theme;
+        const collection = [] as JSX.Element[];
+        let curRow = 0;
+        let curCol = 0;
+
+        Object.keys(colorList).forEach((varName: string) => {
+            collection.push(new ColorContainer({
+                color: colorList[varName],
+                column: curCol,
+                row: curRow,
+                var: varName,
+            }).render());
+
+            ++curCol;
+            if (curCol === this.maxCol) {
+                curCol = 0;
+                ++curRow;
+            }
+        });
+        return collection;
     }
 }

@@ -2,33 +2,33 @@ import React, { Component } from "react";
 import { render, Box, Button, Checkbox, Grid, Group, Text } from "proton-native";
 import * as childProcess from "child_process";
 import fs from "fs";
+import { ExtensionMetadata } from "./extension-loader";
 
-export interface ExtensionMetadata {
-    filePath: string;
-    name: string;
-    author: string;
-    description: string;
-}
+export class ExtensionContainer extends Component<{}, ExtensionMetadata> {
+    private activated: boolean;
+    private watching: boolean;
 
-export class ExtensionContainer extends Component {
-    private metadata: ExtensionMetadata;
-    private watcher: fs.FSWatcher;
-
-    constructor(state: ExtensionMetadata) {
-        super(state);
-        this.metadata = state;
+    constructor(metadata: ExtensionMetadata) {
+        super(metadata);
+        this.state = metadata;
+        this.activated = this.state.activator.getState(this.state.fileName);
+        this.watching = false;
     }
 
     public render() {
         return (
-            <Group title={this.metadata.name}>
+            <Group key={this.state.fileName} stretchy={false} title={this.state.name}>
                 <Box>
-                    <Text>{this.metadata.author}</Text>
-                    <Text>{this.metadata.description}</Text>
+                    <Text>{this.state.author}</Text>
+                    <Text>{this.state.description}</Text>
                     <Box vertical={false}>
-                        <Checkbox>Enable</Checkbox>
+                        <Checkbox
+                            checked = {this.activated}
+                            onToggle = {(checked: boolean) => this.onEnable(checked)}>
+                            Enable
+                        </Checkbox>
                         <Checkbox>Watch</Checkbox>
-                        <Button onClick={() => this.openFile(this.metadata.filePath)}>Open file</Button>
+                        <Button onClick={() => this.openFile(this.state.filePath)}>Open file</Button>
                         <Button>Push</Button>
                     </Box>
                 </Box>
@@ -45,16 +45,19 @@ export class ExtensionContainer extends Component {
     }
 
     private onWatch(checked: boolean) {
-        if (checked) {
-            this.watcher = fs.watch(this.metadata.filePath, this.onPush);
-        } else {
-            if (this.watcher) {
-                this.watcher.close();
-            }
-        }
+        // nothing, yet
     }
 
     private onPush() {
         const doSomethinglater = {};
+    }
+
+    private onEnable(enabled: boolean) {
+        if (enabled) {
+            this.state.activator.activate(this.state.fileName);
+        } else {
+            this.state.activator.deactivate(this.state.fileName);
+        }
+        this.activated = this.state.activator.getState(this.state.fileName);
     }
 }

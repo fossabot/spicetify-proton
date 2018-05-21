@@ -3,51 +3,69 @@ import { render, Box, Button, Checkbox, Grid, Group, Text } from "proton-native"
 import fs from "fs";
 import path from "path";
 import * as childProcess from "child_process";
-import { ExtensionMetadata, ExtensionContainer } from "./extension-container";
+import { ExtensionLoader, ExtensionMetadata } from "./extension-loader";
+import { ExtensionContainer } from "./extension-container";
+import { Page } from "./page";
+import { Activator } from "./activator";
+import { Watcher } from "./watcher";
 
-export class Extension extends Component {
+export class Extension extends Component<{}, { content: React.ReactNode[]; }> {
     private readonly extensionFolderPath = "./User/Extensions";
+    private paging: Page;
+    private collection: ExtensionContainer[];
+
+    public constructor(props) {
+        super(props);
+        this.collection = this.getExtensionCollection();
+        this.paging = new Page(this.collection, 3);
+        this.state = {
+            content: this.paging.render(),
+        };
+    }
 
     public render() {
         return (
-            <Group title="Extensions:">
-                <Box>
-                    {this.getExtensionCollection().map((ext: ExtensionContainer) => ext.render())}
+            <Box>
+                <Box>{this.state.content}</Box>
+                <Box padded stretchy={false} vertical={false}>
+                    <Box></Box>
+                    <Button
+                        onClick={() => this.setState({
+                            content: this.paging.changePage(-1),
+                        })}
+                        stretchy={false}>{"  ◄  "}
+                    </Button>
+                    <Box stretchy={false}>
+                        <Box></Box>
+                        <Text stretchy={false}>{`${this.paging.currentPage + 1} / ${this.paging.totalPage}`}</Text>
+                        <Box></Box>
+                    </Box>
+                    <Button
+                        onClick={() => this.setState({
+                            content: this.paging.changePage(1),
+                        })}
+                        stretchy={false}>{"  ►  "}
+                    </Button>
+                    <Box></Box>
                 </Box>
-            </Group>
+            </Box>
         );
     }
 
     private getExtensionCollection(): ExtensionContainer[] {
         const collection = [] as ExtensionContainer[];
-        fs.readdirSync(this.extensionFolderPath).forEach((file: string): void => {
-            const filePath = path.join(this.extensionFolderPath, file);
-            const content = fs.readFileSync(filePath, "utf-8");
-            const metadata = {
-                author: "N\\A",
-                description: "N\\A",
-                filePath,
-                name: file,
-            } as ExtensionMetadata;
 
-            if (content.match(/\/\/ START METADATA/)) {
-                const name = content.match(/\/\/ NAME: (.*)/);
-                const author = content.match(/\/\/ AUTHOR: (.*)/);
-                const description = content.match(/\/\/ DESCRIPTION: (.*)/);
-                if (name) {
-                    metadata.name = name[1];
-                }
+        const extLoader = new ExtensionLoader(this.extensionFolderPath);
+        const availableExt: string[] = extLoader.getAll();
 
-                if (author) {
-                    metadata.author = author[1];
-                }
+        const extActivator = new Activator(path.join(process.cwd(), "extension.json"), availableExt);
+        const extWatcher = new Watcher();
 
-                if (description) {
-                    metadata.description = description[1];
-                }
-            }
-            collection.push(new ExtensionContainer(metadata));
+        availableExt.forEach((ext) => {
+            const meta = extLoader.readMetadata(ext, extActivator, extWatcher);
+            collection.push(new ExtensionContainer(meta));
         });
+
         return collection;
     }
 }

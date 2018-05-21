@@ -4,10 +4,8 @@ import { render, Box, Checkbox, ColorButton, Grid, Group, Text } from "proton-na
 export class CustomApp extends Component {
     public render() {
         return (
-            <Group title="Apps:">
-                <Box>
-                </Box>
-            </Group>
+            <Box>
+            </Box>
         );
     }
 }

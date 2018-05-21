@@ -4,7 +4,7 @@ import { render, Box, Button } from "proton-native";
 export class ButtonAction extends Component {
     public render() {
         return(
-            <Box vertical={false}>
+            <Box stretchy={false} vertical={false}>
               <Button onClick={() => this.backup()}>Backup</Button>
               <Button onClick={() => this.clearBackup()}>Clear backup</Button>
               <Button onClick={() => this.openCSSFile()}>Edit CSS</Button>
