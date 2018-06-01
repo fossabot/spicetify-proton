@@ -27,7 +27,9 @@ const varList =  [
 ];
 
 export class ColorList {
-    public list = {};
+    public list = {} as {
+        [key: string]: DetailColor
+    };
 
     public constructor(colors: RawTheme) {
         varList.forEach((varName) => {

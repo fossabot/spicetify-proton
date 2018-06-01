@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { render, Box, Button, Checkbox, Grid, Group, Text } from "proton-native";
 import * as childProcess from "child_process";
 import fs from "fs";
 import { ExtensionMetadata } from "./extension-loader";
 
-export class ExtensionContainer extends Component<{}, ExtensionMetadata> {
+export class ExtensionContainer extends React.Component<{}, ExtensionMetadata> {
     private activated: boolean;
     private watching: boolean;
 
@@ -37,7 +37,7 @@ export class ExtensionContainer extends Component<{}, ExtensionMetadata> {
     }
 
     private openFile(file: string) {
-        childProcess.exec(file, (err, stoud, sterr) => {
+        childProcess.exec(file, (err) => {
             if (err) {
                 // console.log(err);
             }

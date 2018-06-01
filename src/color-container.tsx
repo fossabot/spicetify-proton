@@ -1,5 +1,9 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { render, Box, ColorButton, Group, Separator, Text } from "proton-native";
+
+interface ColorDict {
+    [key: string]: string
+}
 
 const colorDictionary = {
     cover_overlay_and_shadow: "Cover overlay\nShadow",
@@ -18,9 +22,9 @@ const colorDictionary = {
     sidebar_and_player_bg: "Sidebar BG\nplayer BG",
     sidebar_indicator_and_hover_button_bg: "Sidebar indicator\nHover button BG",
     slider_bg: "Slider BG",
-}
+} as ColorDict
 
-export class ColorContainer extends Component {
+export class ColorContainer extends React.Component {
     private text: string;
     private color: string;
     private row: number;
@@ -41,6 +45,7 @@ export class ColorContainer extends Component {
     public render() {
         return (
             <Box
+                stretchy={false}
                 key={this.text}
                 align={{h: false, v: false}}
                 row={this.row}

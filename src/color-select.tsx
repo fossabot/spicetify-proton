@@ -1,9 +1,9 @@
-import { Component } from "react";
+import * as React from "react";
 import { render, Grid } from "proton-native";
 import { ColorContainer } from "./color-container";
 import { ThemeLoader } from "./theme-loader";
 
-export class ColorSelect extends Component {
+export class ColorSelect extends React.Component {
     private readonly maxCol = 4;
 
     public render() {

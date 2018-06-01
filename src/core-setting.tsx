@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { render, Box, Checkbox, Group } from "proton-native";
 
-export class CoreSetting extends Component {
+export class CoreSetting extends React.Component {
     public render() {
         return (
             <Box padded={true}>

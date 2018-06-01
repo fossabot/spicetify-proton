@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { render, Box, Button } from "proton-native";
 
-export class ButtonAction extends Component {
+export class ButtonAction extends React.Component {
     public render() {
         return(
             <Box stretchy={false} vertical={false}>

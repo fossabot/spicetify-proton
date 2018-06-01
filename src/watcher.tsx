@@ -7,6 +7,9 @@ interface WatcherContainer {
 export class Watcher {
     private list: WatcherContainer;
 
+    constructor() {
+        this.list = {};
+    }
     public watch(path: string, callback: (event: string, filename: string) => any): void {
         this.list[path] = fs.watch(path, callback);
     }

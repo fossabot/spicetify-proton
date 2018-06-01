@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { render, Window, App, Box, Button, Group, ProgressBar, Tab } from "proton-native";
 import { Extension } from "./extension";
 import { CoreSetting } from "./core-setting";
@@ -7,7 +7,7 @@ import { CustomApp } from "./custom-app";
 import { FolderPick } from "./folder-pick";
 import { ButtonAction } from "./button-action";
 
-class Spicetify extends Component {
+class Spicetify extends React.Component {
     public render() {
         return (
             <App>

@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { render, Box, Button, Form, Group, TextInput, Dialog } from "proton-native";
 
-export class FolderPick extends Component {
+export class FolderPick extends React.Component {
     public render() {
         return (
             <Box vertical={false}>

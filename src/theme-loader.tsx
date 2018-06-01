@@ -15,6 +15,7 @@ export class ThemeLoader {
             this.path = path;
             this.theme = this.loadColor();
         } else {
+            this.path = "";
             this.theme = this.loadDefault();
         }
     }
