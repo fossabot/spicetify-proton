@@ -1,23 +1,31 @@
-import * as React from "react";
-import { render, Box, Button, Checkbox, Grid, Group, Text } from "proton-native";
 import * as childProcess from "child_process";
+import * as React from "react";
 import fs from "fs";
-import { ExtensionMetadata } from "./extension-loader";
+import {
+    Box,
+    Button,
+    Checkbox,
+    Grid,
+    Group,
+    render,
+    Text
+    } from "proton-native";
+import { IMetadata } from "./extension-loader";
 
-export class ExtensionContainer extends React.Component<{}, ExtensionMetadata> {
+export class ExtensionContainer extends React.Component<{}, IMetadata> {
     private activated: boolean;
     private watching: boolean;
 
-    constructor(metadata: ExtensionMetadata) {
+    constructor(metadata: IMetadata) {
         super(metadata);
         this.state = metadata;
-        this.activated = this.state.activator.getState(this.state.fileName);
+        this.activated = this.state.activator.getState(this.state.id);
         this.watching = false;
     }
 
     public render() {
         return (
-            <Group key={this.state.fileName} stretchy={false} title={this.state.name}>
+            <Group key={this.state.id} stretchy={false} title={this.state.name}>
                 <Box>
                     <Text>{this.state.author}</Text>
                     <Text>{this.state.description}</Text>
@@ -28,7 +36,7 @@ export class ExtensionContainer extends React.Component<{}, ExtensionMetadata> {
                             Enable
                         </Checkbox>
                         <Checkbox>Watch</Checkbox>
-                        <Button onClick={() => this.openFile(this.state.filePath)}>Open file</Button>
+                        <Button onClick={() => this.openFile(this.state.path)}>Open file</Button>
                         <Button>Push</Button>
                     </Box>
                 </Box>
@@ -54,10 +62,10 @@ export class ExtensionContainer extends React.Component<{}, ExtensionMetadata> {
 
     private onEnable(enabled: boolean) {
         if (enabled) {
-            this.state.activator.activate(this.state.fileName);
+            this.state.activator.activate(this.state.id);
         } else {
-            this.state.activator.deactivate(this.state.fileName);
+            this.state.activator.deactivate(this.state.id);
         }
-        this.activated = this.state.activator.getState(this.state.fileName);
+        this.activated = this.state.activator.getState(this.state.id);
     }
 }

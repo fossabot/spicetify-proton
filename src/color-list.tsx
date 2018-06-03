@@ -1,8 +1,8 @@
 import * as ColorString from "color-string";
-import { RawTheme } from "./theme-loader";
 import { get, to } from "color-string";
+import { RawTheme } from "./theme-loader";
 
-export interface DetailColor {
+export interface IDetailColor {
     hex: string;
     rgb: string;
 }
@@ -28,7 +28,7 @@ const varList =  [
 
 export class ColorList {
     public list = {} as {
-        [key: string]: DetailColor
+        [key: string]: IDetailColor,
     };
 
     public constructor(colors: RawTheme) {
@@ -36,7 +36,7 @@ export class ColorList {
             this.list[varName] = {
                 hex: "",
                 rgb: "",
-            } as DetailColor;
+            };
         });
 
         Object.keys(colors).forEach((key: string) => {
