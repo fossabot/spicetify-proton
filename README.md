@@ -2,6 +2,8 @@
 Standalone Spicetify with native UI.  
 Barely working right now.
 
+![demo](https://i.imgur.com/aOmBKjM.png)
+
 ## Req:
 1. Git/Github Desktop
 2. NodeJS
@@ -22,17 +24,12 @@ Finally, install necessary packages:
 ```
 yarn
 ```
-### Watch
-```
-yarn watch
-```
 
 ### Run
 ```
 yarn start
 ```
 
-Should run `watch` or `build` one time before start
 
 ### Test
 ```
@@ -50,11 +47,18 @@ yarn lint
 ```
 
 ### Build
+Compile all *.tsx to ./build/*.js
 ```
 yarn build
 ```
 
-### Package
+### Watch
 ```
-yarn pack
+yarn build:watch
+```
+
+### Package
+Currently, it also packs Electron dependencies too.
+```
+yarn package
 ```
