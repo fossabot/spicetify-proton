@@ -1,11 +1,16 @@
 import * as React from "react";
-import { render, Box, ColorButton, Group, Separator, Text } from "proton-native";
+import { IColorChanger } from "./color-select";
+import { to } from "color-string";
+import {
+    Box,
+    ColorButton,
+    Group,
+    render,
+    Separator,
+    Text,
+    } from "proton-native";
 
-interface ColorDict {
-    [key: string]: string
-}
-
-const colorDictionary = {
+export const colorDictionary: { [key: string]: string } = {
     cover_overlay_and_shadow: "Cover overlay\nShadow",
     indicator_fg_and_button_bg: "Indicator FG\nButton BG",
     main_bg: "Main BG",
@@ -22,23 +27,36 @@ const colorDictionary = {
     sidebar_and_player_bg: "Sidebar BG\nplayer BG",
     sidebar_indicator_and_hover_button_bg: "Sidebar indicator\nHover button BG",
     slider_bg: "Slider BG",
-} as ColorDict
+};
 
-export class ColorContainer extends React.Component {
-    private text: string;
+interface IColorButton {
+    changer: IColorChanger["changer"];
+    color: string;
+    column: number;
+    id: string;
+    row: number;
+}
+
+export class ColorContainer extends React.Component<IColorButton> {
+    private changer: IColorChanger["changer"];
     private color: string;
-    private row: number;
     private column: number;
+    private id: string;
+    private row: number;
+    private text: string;
 
-    constructor(content: {var: string, color: string, row: number, column: number}) {
-        super(content);
-        this.color = content.color;
-        this.row = content.row;
-        this.column = content.column;
-        if (colorDictionary[content.var] !== undefined) {
-            this.text = colorDictionary[content.var];
+    constructor(props: IColorButton) {
+        super(props);
+        this.color = props.color;
+        this.row = props.row;
+        this.column = props.column;
+        this.changer = props.changer;
+        this.id = props.id;
+
+        if (colorDictionary[this.id] !== undefined) {
+            this.text = colorDictionary[this.id];
         } else {
-            this.text = "Unknown";
+            this.text = props.id;
         }
     }
 
@@ -54,9 +72,15 @@ export class ColorContainer extends React.Component {
                 <ColorButton
                     stretchy={false}
                     color={this.color}
+                    onChange={(c) => this.changeColor([c.r, c.g, c.b])}
                 />
                 <Text>{this.text}</Text>
             </Box>
         );
+    }
+
+    private changeColor(color: [number, number, number]): void {
+        const hex = to.hex(color);
+        this.changer(this.id, hex);
     }
 }

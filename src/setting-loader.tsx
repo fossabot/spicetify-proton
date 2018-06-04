@@ -1,12 +1,19 @@
-import { Settings } from "./settings";
-import { defaultSetting } from "./default-setting";
 import * as fs from "fs";
+import * as path from "path";
+import { defaultSetting } from "./default-setting";
+import { Settings } from "./settings";
 
 export class SettingLoader {
     private settingFilePath: string;
+    private setting: Settings;
 
-    public constructor(path: string) {
-        this.settingFilePath = path;
+    public constructor(filePath?: string) {
+        if (filePath !== undefined) {
+            this.settingFilePath = filePath;
+        } else {
+            this.settingFilePath = path.join(process.cwd(), "setting.json");
+        }
+        this.setting = this.load();
     }
 
     public load(): Settings {
@@ -26,11 +33,8 @@ export class SettingLoader {
         fs.writeFileSync(this.settingFilePath, stringified, "utf-8");
     }
 
-    public set(key: string, value: any): void {
-        const setting = this.load();
-        if (typeof value === typeof setting[key]) {
-            setting[key] = value;
-            this.write(setting);
-        }
+    public set<K extends keyof Settings>(key: K, value: Settings[K]): void {
+        this.setting[key] = value;
+        this.write(this.setting);
     }
 }

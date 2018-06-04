@@ -1,0 +1,25 @@
+extends: "tslint:recommended"
+rules:
+    max-line-length:
+        options: [120]
+    indent:
+        - true
+        - "spaces"
+        - 4
+    interface-name:
+        - true
+        - "always-prefix"
+    new-parens: true
+    no-arg: true
+    no-bitwise: true
+    no-conditional-assignment: true
+    no-consecutive-blank-lines: true
+    no-console:
+        severity: warning
+        options:
+            - debug
+            - info
+            - log
+            - time
+            - timeEnd
+            - trace

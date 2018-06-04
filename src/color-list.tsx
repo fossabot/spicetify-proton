@@ -3,11 +3,13 @@ import { get, to } from "color-string";
 import { RawTheme } from "./theme-loader";
 
 export interface IDetailColor {
+    id: string;
     hex: string;
     rgb: string;
 }
 
-const varList =  [
+// If adding new var in this list, colorDictionary should be added as well.
+const orderedVarList =  [
     "main_fg",
     "secondary_fg",
     "main_bg",
@@ -27,32 +29,32 @@ const varList =  [
 ];
 
 export class ColorList {
-    public list = {} as {
-        [key: string]: IDetailColor,
-    };
+    public list = [] as IDetailColor[];
 
     public constructor(colors: RawTheme) {
-        varList.forEach((varName) => {
-            this.list[varName] = {
-                hex: "",
-                rgb: "",
-            };
+        const clone: RawTheme = {};
+        Object.assign(clone, colors);
+
+        orderedVarList.forEach((id) => {
+            const { hex, rgb } = this.validateColor(clone[id]);
+            this.list.push({ id, hex, rgb });
+            delete clone[id];
         });
 
-        Object.keys(colors).forEach((key: string) => {
-            this.assignColor(key, colors[key]);
+        // Append remaining colors
+        Object.keys(clone).forEach((id) => {
+            const { hex, rgb } = this.validateColor(clone[id]);
+            this.list.push({ id, hex, rgb });
         });
     }
 
-    public assignColor(name: string, value: string) {
-        const converted = get(value);
+    private validateColor(rawColor: string): { hex: string, rgb: string } {
+        const converted = get(rawColor);
         if (converted) {
             const colorOnly = converted.value.slice(0, 3);
-            this.list[name].hex = to.hex(colorOnly);
-            this.list[name].rgb = to.rgb(colorOnly);
+            return { hex: to.hex(colorOnly), rgb: to.rgb(colorOnly) };
         } else {
-            this.list[name].hex = "#000000";
-            this.list[name].rgb = "rgb(0, 0, 0)";
+            return { hex: "#000000", rgb: "rgb(0, 0, 0)" };
         }
     }
 }

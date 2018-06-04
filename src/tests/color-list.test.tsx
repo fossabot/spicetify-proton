@@ -23,10 +23,12 @@ describe("color-list", (): void => {
 
     const colorList = new ColorList(testColor);
     it("Should return 255,255,255", (): void => {
-        expect(colorList.list["main_fg"].rgb).toBe("rgb(255, 255, 255)");
+        // main_fg
+        expect(colorList.list[0].rgb).toBe("rgb(255, 255, 255)");
     });
 
     it("Should return default 0, 0, 0", (): void => {
-        expect(colorList.list["secondary_fg"].rgb).toBe("rgb(0, 0, 0)");
+        // secondary_fg
+        expect(colorList.list[1].rgb).toBe("rgb(0, 0, 0)");
     });
 })

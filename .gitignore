@@ -62,4 +62,14 @@ typings/
 
 # dotenv environment variables file
 .env
+
 yarn.lock
+
+.vscode
+
+User/Backup/
+
+TestExtensionLoader/
+
+Extracted/
+package-lock.json

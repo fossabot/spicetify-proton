@@ -1,6 +1,7 @@
 import * as childProcess from "child_process";
 import * as React from "react";
 import fs from "fs";
+import { IMetadata } from "./metadata";
 import {
     Box,
     Button,
@@ -8,17 +9,16 @@ import {
     Grid,
     Group,
     render,
-    Text
+    Text,
     } from "proton-native";
-import { IMetadata } from "./extension-loader";
 
-export class ExtensionContainer extends React.Component<{}, IMetadata> {
+export class ExtensionContainer extends React.Component<{metadata: IMetadata}, IMetadata> {
     private activated: boolean;
     private watching: boolean;
 
-    constructor(metadata: IMetadata) {
-        super(metadata);
-        this.state = metadata;
+    constructor(props: {metadata: IMetadata}) {
+        super(props);
+        this.state = props.metadata;
         this.activated = this.state.activator.getState(this.state.id);
         this.watching = false;
     }

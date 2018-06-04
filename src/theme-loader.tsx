@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { get, to, Color } from "color-string";
+import { Color, get, to } from "color-string";
 import { defaultTheme } from "./default-theme";
 
 export interface RawTheme {
@@ -15,6 +15,7 @@ export class ThemeLoader {
             this.path = path;
             this.theme = this.loadColor();
         } else {
+            // TODO: Create new theme file in theme folder and put its path here
             this.path = "";
             this.theme = this.loadDefault();
         }

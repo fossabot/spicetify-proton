@@ -1,7 +1,7 @@
 import * as fs from "fs";
 
 export class Activator {
-    public list: string[];
+    private list: string[];
     private storage: string;
 
     constructor(storage: string, availableList?: string[]) {

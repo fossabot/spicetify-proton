@@ -1,13 +1,36 @@
 import * as React from "react";
-import { render, Window, App, Box, Button, Group, ProgressBar, Tab } from "proton-native";
-import { Extension } from "./extension";
-import { CoreSetting } from "./core-setting";
-import { ColorSelect } from "./color-select";
-import { CustomApp } from "./custom-app";
-import { FolderPick } from "./folder-pick";
 import { ButtonAction } from "./button-action";
+import { ColorList } from "./color-list";
+import { ColorSelect } from "./color-select";
+import { CoreSetting } from "./core-setting";
+import { CustomApp } from "./custom-app";
+import { Extension } from "./extension";
+import { ExtensionLoader } from "./extension-loader";
+import { FolderPick } from "./folder-pick";
+import { SettingLoader } from "./setting-loader";
+import { ThemeLoader } from "./theme-loader";
+import {
+    App,
+    Box,
+    Group,
+    ProgressBar,
+    render,
+    Tab,
+    Window,
+    } from "proton-native";
 
 class Spicetify extends React.Component {
+    private extensionLoader: ExtensionLoader;
+    private themeLoader: ThemeLoader;
+    private settingLoader: SettingLoader;
+
+    constructor(props: {}) {
+        super(props);
+        this.themeLoader = new ThemeLoader(/* load default */);
+        this.settingLoader = new SettingLoader(/* load default */);
+        this.extensionLoader = new ExtensionLoader(/* load default */);
+    }
+
     public render() {
         return (
             <App>
@@ -16,8 +39,18 @@ class Spicetify extends React.Component {
                     <Box stretchy={false}><FolderPick /></Box>
                     <Tab>
                         <Box padded label="Core setting"><CoreSetting/></Box>
-                        <Box padded label="Color"><ColorSelect/></Box>
-                        <Box padded label="Extension"><Extension/></Box>
+                        <Box padded label="Color">
+                            <ColorSelect
+                                // TODO: move to constructor
+                                list = {new ColorList(this.themeLoader.theme).list}
+                                changer = {this.themeLoader.setColor}
+                            />
+                        </Box>
+                        <Box padded label="Extension">
+                            <Extension
+                                collection={this.extensionLoader.collection}
+                            />
+                        </Box>
                         <Box padded label="App"><CustomApp/></Box>
                     </Tab>
                     <ButtonAction />

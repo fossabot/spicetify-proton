@@ -27,25 +27,25 @@ describe("ExtensionLoader", (): void => {
 
     const loader = new ExtensionLoader(testFolder);
     it("Load files from extension folder. Should return 3", (): void => {
-        expect(loader.getAll().length).toBe(3);
+        expect(loader.collection.length).toBe(3);
     })
 
     it("Read Metadata. Should return all fields info correctly", (): void => {
-        const meta = loader.readMetadata(ext0File, null, null);
+        const meta = loader.collection[0];
         expect(meta.name).toBe("Ayyy");
         expect(meta.author).toBe("Lmao");
         expect(meta.description).toBe("Yomama.");
     })
 
     it("Read invalid metadata. Should return default info", (): void => {
-        const meta = loader.readMetadata(ext1File, null, null);
+        const meta = loader.collection[1];
         expect(meta.name).toBe(ext1File);
         expect(meta.author).toBe("N/A");
         expect(meta.description).toBe("N/A");
     })
 
     it("Read no metadata extension. Should return default info", (): void => {
-        const meta = loader.readMetadata(ext2File, null, null);
+        const meta = loader.collection[2];
         expect(meta.name).toBe(ext2File);
         expect(meta.author).toBe("N/A");
         expect(meta.description).toBe("N/A");

@@ -1,27 +1,56 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Activator } from "./activator";
+import { IMetadata } from "./metadata";
 import { Watcher } from "./watcher";
 
-export interface ExtensionMetadata {
-    activator: Activator;
-    fileName: string;
-    filePath: string;
-    name: string;
-    author: string;
-    description: string;
-    watcher: Watcher;
-}
-
 export class ExtensionLoader {
-    private folderPath: string;
+    public collection: IMetadata[];
 
-    constructor(folderPath: string) {
-        this.folderPath = folderPath;
+    private folderPath: string;
+    private storagePath: string;
+
+    constructor(folderPath?: string, storage?: string) {
+        if (folderPath !== undefined) {
+            this.folderPath = folderPath;
+        } else {
+            this.folderPath = path.join(process.cwd(), "User\\Extensions");
+        }
+
+        if (storage !== undefined) {
+            this.storagePath = storage;
+        } else {
+            this.storagePath = path.join(process.cwd(), "extension.json");
+        }
+
+        const list = this.getList();
+
+        const activator = new Activator(this.storagePath, list);
+        const watcher = new Watcher();
+        this.collection = list.map((item) => {
+            const meta = this.readMetadata(item);
+            return {
+                activator,
+                author: meta.author,
+                description: meta.description,
+                id: item,
+                name: meta.name,
+                path: meta.filePath,
+                watcher,
+            } as IMetadata;
+        });
     }
 
-    public getAll(): string[] {
-        const dir = fs.readdirSync(this.folderPath);
+    private getList(): string[] {
+        let dir: string[] = [];
+
+        try {
+            dir = fs.readdirSync(this.folderPath);
+        } catch (e) {
+            fs.mkdirSync(this.folderPath);
+            return [];
+        }
+
         const content: string[] = [];
         dir.forEach((item: string) => {
             item = item.toLowerCase();
@@ -36,35 +65,29 @@ export class ExtensionLoader {
         return content;
     }
 
-    public readMetadata(fileName: string, activator: Activator, watcher: Watcher): ExtensionMetadata {
+    private readMetadata(fileName: string) {
         const filePath = path.join(this.folderPath, fileName);
         const data = fs.readFileSync(filePath, "utf-8");
-        const metadata: ExtensionMetadata = {
-            activator,
-            author: "N/A",
-            description: "N/A",
-            fileName,
-            filePath,
-            name: fileName,
-            watcher
-        };
+        let name = fileName;
+        let author = "N/A";
+        let description = "N/A";
 
         if (data.match(/\/\/ START METADATA/) !== null) {
-            const name = data.match(/\/\/ NAME: (.*)/);
-            const author = data.match(/\/\/ AUTHOR: (.*)/);
-            const description = data.match(/\/\/ DESCRIPTION: (.*)/);
-            if (name !== null) {
-                metadata.name = name[1];
+            const rawName = data.match(/\/\/ NAME: (.*)/);
+            const rawAuthor = data.match(/\/\/ AUTHOR: (.*)/);
+            const rawDescription = data.match(/\/\/ DESCRIPTION: (.*)/);
+            if (rawName !== null) {
+                name = rawName[1];
             }
 
-            if (author !== null) {
-                metadata.author = author[1];
+            if (rawAuthor !== null) {
+                author = rawAuthor[1];
             }
 
-            if (description !== null) {
-                metadata.description = description[1];
+            if (rawDescription !== null) {
+                description = rawDescription[1];
             }
         }
-        return metadata;
+        return { author, description, filePath, name };
     }
 }
