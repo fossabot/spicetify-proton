@@ -22,13 +22,12 @@ export class ButtonAction extends React.Component {
         return(
             <Box stretchy={false} vertical={false}>
               <Button onClick={() => this.backupAction()}>Backup</Button>
+              <Button onClick={() => this.tryExtract()}>Extract Spa</Button>
               <Button onClick={() => this.clearBackup()}>Clear backup</Button>
               <Button onClick={() => this.openCSSFile()}>Edit CSS</Button>
               <Button onClick={() => this.pushCSS()}>Update CSS</Button>
               <Button onClick={() => this.restartSpotify()}>Restart</Button>
               <Button onClick={() => this.apply()}>Apply</Button>
-              <Button onClick={() => this.tryExtract()}>CHÓ NÁCH</Button>
-              <Button onClick={() => this.tryExtract()}>CU TEO</Button>
             </Box>
         );
     }
