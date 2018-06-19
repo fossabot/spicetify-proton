@@ -3,6 +3,7 @@ Standalone Spicetify with native UI.
 Barely working right now.
 
 ![demo](https://i.imgur.com/aOmBKjM.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkhanhas%2Fspicetify-proton.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkhanhas%2Fspicetify-proton?ref=badge_shield)
 
 ## Req:
 1. Git/Github Desktop
@@ -62,3 +63,7 @@ Currently, it also packs Electron dependencies too.
 ```
 yarn package
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkhanhas%2Fspicetify-proton.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkhanhas%2Fspicetify-proton?ref=badge_large)
